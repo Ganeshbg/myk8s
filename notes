@@ -1,0 +1,21 @@
+Deamonset:
+    Deamonset makes sure 1 pod of the kind we want be running on all the nodes. Ex: kube-proxy
+    kubectl get ds -n namespace => Get Deamonset
+    To create a deamon set easily, do kubectl create deploy name --image --dry-run -o yaml > ds.yaml Change the Deployment to Deamonset
+
+Static Pod:
+    Static pods are not created by the masters, instead place a pod yaml in /etc/kubernetes/manifests (default place where kubelet places the pod yamls.)
+    and kubelet will create that pod on that node. If not default path, the path to the manifest will be configured under --config in kubelet
+    service file and look for staticPodPath
+
+custom scheduler or multiple scheduler: 
+https://kubernetes.io/docs/tasks/extend-kubernetes/configure-multiple-schedulers/
+
+    We can have multiple schedulers with our own stuff. 
+    create a pod spec similar to the existing kube-scheduler
+    and add the below lines in the container spec
+    - --leader-elect=false => optional if you want to disable leader election
+    - --scheduler-name=my-scheduler
+
+Then create a pod which you want to be scheduled with this scheduler using the below option under pod spec.
+schedulerName: my-scheduler 
